@@ -4,23 +4,16 @@
 import { App, ReferenceCache, TFile, parseYaml } from 'obsidian';
 import { FileRec, LinkRef, VaultSnapshot } from './types';
 import { analyzeFrontmatter, bodyLengthOf } from './frontmatter';
-import { extname } from './pathutil';
+import { extname, splitMdLink } from './pathutil';
 
 /** Yield to the UI every N files so big vaults don't freeze the app. */
 const CHUNK = 150;
 
 function splitTarget(link: string, kind: LinkRef['kind']): { target: string; subpath?: string } {
-	let text = link;
-	if (kind === 'md') {
-		try {
-			text = decodeURIComponent(link);
-		} catch {
-			text = link;
-		}
-	}
-	const i = text.indexOf('#');
-	if (i === -1) return { target: text };
-	return { target: text.slice(0, i), subpath: text.slice(i) };
+	if (kind === 'md') return splitMdLink(link);
+	const i = link.indexOf('#');
+	if (i === -1) return { target: link };
+	return { target: link.slice(0, i), subpath: link.slice(i) };
 }
 
 function wikiRaw(original: string | undefined, link: string): string {

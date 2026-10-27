@@ -80,7 +80,8 @@ export function suggestTargets(
  * Pick the linkpath form to write into a note:
  * - wiki links use the bare basename when it is unique in the vault,
  *   otherwise the full path (extension stripped for .md/.canvas)
- * - md-style links get a relative path with percent-encoded spaces
+ * - md-style links get a relative path with spaces and parentheses
+ *   percent-encoded (unencoded `)` would end the link destination)
  */
 export function preferredLinkpath(
 	dest: FileRec,
@@ -98,5 +99,8 @@ export function preferredLinkpath(
 		if (noteExt) return ambiguous ? stripExt(dest.path) : stem;
 		return ambiguous ? dest.path : base;
 	}
-	return relativePath(dirname(sourcePath), dest.path).replace(/ /g, '%20');
+	return relativePath(dirname(sourcePath), dest.path)
+		.replace(/ /g, '%20')
+		.replace(/\(/g, '%28')
+		.replace(/\)/g, '%29');
 }

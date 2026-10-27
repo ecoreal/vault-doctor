@@ -61,6 +61,14 @@ describe('resolveLinkpath', () => {
 		expect(resolveLinkpath('My%20Note', 'md', 'a.md', idx)?.path).toBe('My Note.md');
 	});
 
+	it('resolves already-decoded targets containing # (filename with a hash)', () => {
+		// collect.ts splits md links on the literal # first, so the target
+		// arrives decoded; the resolver must accept the '#' in the path
+		const idx = idxOf('C# Notes.md');
+		expect(resolveLinkpath('C# Notes', 'md', 'a.md', idx)?.path).toBe('C# Notes.md');
+		expect(resolveLinkpath('C# Notes.md', 'md', 'a.md', idx)?.path).toBe('C# Notes.md');
+	});
+
 	it('handles targets with dots in folder names', () => {
 		const idx = idxOf('My.Project/file.md');
 		expect(resolveLinkpath('My.Project/file', 'wiki', 'a.md', idx)?.path).toBe('My.Project/file.md');

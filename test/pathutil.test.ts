@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { basename, buildMatcher, dirname, extname, relativePath, stripExt } from '../src/pathutil';
+import {
+	basename, buildMatcher, decodeLinkComponent, dirname, extname, relativePath, splitMdLink, stripExt,
+} from '../src/pathutil';
 
 describe('path helpers', () => {
 	it('dirname/basename/extname/stripExt', () => {
@@ -51,5 +53,28 @@ describe('buildMatcher', () => {
 
 	it('ignores invalid regexes instead of throwing', () => {
 		expect(() => m([], ['([invalid']).matches('x.md')).not.toThrow();
+	});
+});
+
+describe('splitMdLink', () => {
+	it('splits on the literal # before decoding', () => {
+		// a filename containing '#' must be written %23 in md links; the
+		// %23 must not be mistaken for the start of a subpath
+		expect(splitMdLink('C%23%20Notes.md#Sec')).toEqual({
+			target: 'C# Notes.md',
+			subpath: '#Sec',
+		});
+	});
+
+	it('decodes plain destinations and keeps unencoded input on bad escapes', () => {
+		expect(splitMdLink('My%20Note.md')).toEqual({ target: 'My Note.md', subpath: '' });
+		expect(splitMdLink('Note.md#Head%20Two')).toEqual({ target: 'Note.md', subpath: '#Head Two' });
+		expect(splitMdLink('bad%ZZ.md')).toEqual({ target: 'bad%ZZ.md', subpath: '' });
+	});
+
+	it('decodes standalone components', () => {
+		expect(decodeLinkComponent('a%20b')).toBe('a b');
+		expect(decodeLinkComponent('plain')).toBe('plain');
+		expect(decodeLinkComponent('%E0%A4%A')).toBe('%E0%A4%A');
 	});
 });

@@ -114,3 +114,27 @@ export function buildMatcher(globs: string[], regexes: string[]): Matcher {
 export function escapeRe(s: string): string {
 	return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
+
+/** Decode a percent-encoded link component; keep the raw text on bad input. */
+export function decodeLinkComponent(s: string): string {
+	if (!/%[0-9a-fA-F]{2}/.test(s)) return s;
+	try {
+		return decodeURIComponent(s);
+	} catch {
+		return s;
+	}
+}
+
+/**
+ * Split an md-style link destination into decoded linkpath + subpath.
+ * The '#' that starts a subpath is located BEFORE decoding, so a filename
+ * containing a literal '#' (which md links must write as %23) is not
+ * mistaken for a subpath marker.
+ */
+export function splitMdLink(dest: string): { target: string; subpath: string } {
+	const i = dest.indexOf('#');
+	return {
+		target: decodeLinkComponent(i === -1 ? dest : dest.slice(0, i)),
+		subpath: i === -1 ? '' : decodeLinkComponent(dest.slice(i)),
+	};
+}

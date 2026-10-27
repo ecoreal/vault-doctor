@@ -77,4 +77,12 @@ describe('preferredLinkpath', () => {
 		const out2 = preferredLinkpath(dest2, 'md', 'x.md', index);
 		expect(out2).toBe('Notes/A.md');
 	});
+
+	it('percent-encodes parentheses in md-style links', () => {
+		// an unencoded ')' would terminate the markdown link destination
+		const idx2 = buildIndex(snap([rec({ path: 'Notes/My (1) Note.md' })]));
+		const dest = idx2.all[0];
+		const out = preferredLinkpath(dest, 'md', 'Notes/source.md', idx2);
+		expect(out).toBe('My%20%281%29%20Note.md');
+	});
 });
