@@ -1,0 +1,30 @@
+{
+  "name": "vault-doctor",
+  "version": "1.0.1",
+  "description": "Health checks for your Obsidian vault: broken links, orphan notes, stub notes, oversized attachments, frontmatter lint, ambiguous basenames and unsafe filenames — with one-click fixes.",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [
+    "obsidian",
+    "obsidian-plugin",
+    "vault",
+    "health",
+    "lint",
+    "broken-links",
+    "orphans"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "builtin-modules": "^5.4.0",
+    "esbuild": "^0.25.0",
+    "obsidian": "^1.8.7",
+    "typescript": "^5.8.0",
+    "vitest": "^3.2.0"
+  }
+}

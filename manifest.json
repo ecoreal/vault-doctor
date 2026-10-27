@@ -1,0 +1,9 @@
+{
+	"id": "vault-doctor",
+	"name": "Vault Doctor",
+	"version": "1.0.1",
+	"minAppVersion": "1.4.0",
+	"description": "Health checks for your vault: broken links, orphans, stub notes, oversized attachments, frontmatter lint, ambiguous names — with one-click fixes.",
+	"author": "nova",
+	"isDesktopOnly": false
+}

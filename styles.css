@@ -1,0 +1,207 @@
+/* Vault Doctor dashboard */
+
+.vault-doctor-view {
+	padding: 12px 16px;
+}
+
+.vd-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 8px;
+}
+
+.vd-title-text {
+	font-size: 1.2em;
+	font-weight: 600;
+}
+
+.vd-actions {
+	display: flex;
+	gap: 6px;
+}
+
+.vd-status {
+	color: var(--text-muted);
+	padding: 24px 0;
+	text-align: center;
+}
+
+.vd-chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin: 6px 0 14px;
+}
+
+.vd-chip {
+	padding: 2px 10px;
+	border-radius: 12px;
+	font-size: 0.85em;
+	background: var(--background-modifier-hover);
+}
+
+.vd-chip-error {
+	background: var(--background-modifier-error);
+	color: var(--text-on-accent);
+}
+
+.vd-chip-warning {
+	background: rgba(var(--color-yellow-rgb), 0.2);
+}
+
+.vd-chip-info {
+	background: rgba(var(--color-blue-rgb), 0.15);
+}
+
+.vd-chip-ok {
+	background: rgba(var(--color-green-rgb), 0.15);
+}
+
+.vd-allclear {
+	padding: 32px 0;
+	text-align: center;
+	color: var(--text-success, #4caf50);
+	font-size: 1.05em;
+}
+
+.vd-section {
+	margin-bottom: 14px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+.vd-section-head {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 12px;
+	cursor: pointer;
+	background: var(--background-secondary);
+	user-select: none;
+}
+
+.vd-section-title {
+	font-weight: 600;
+	flex: 1;
+}
+
+.vd-fixall {
+	font-size: 0.85em;
+}
+
+.vd-row {
+	padding: 8px 12px;
+	border-top: 1px solid var(--background-modifier-border);
+}
+
+.vd-row:first-of-type {
+	border-top: none;
+}
+
+.vd-row-main {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 8px;
+}
+
+.vd-row-msg {
+	flex: 1 1 auto;
+}
+
+.vd-row-file {
+	color: var(--text-muted);
+	font-size: 0.85em;
+	font-family: var(--font-monospace);
+	cursor: pointer;
+}
+
+.vd-row-file:hover {
+	color: var(--text-normal);
+	text-decoration: underline;
+}
+
+.vd-row-detail {
+	color: var(--text-faint);
+	font-size: 0.85em;
+}
+
+.vd-row-list {
+	margin-top: 4px;
+	padding-left: 16px;
+	color: var(--text-muted);
+	font-size: 0.85em;
+	font-family: var(--font-monospace);
+}
+
+.vd-row-bar {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 4px;
+}
+
+.vd-suggestion {
+	color: var(--text-accent);
+	font-size: 0.85em;
+}
+
+.vd-sev-error .vd-row-msg::before,
+.vd-sev-warning .vd-row-msg::before,
+.vd-sev-info .vd-row-msg::before {
+	content: '●';
+	margin-right: 6px;
+	font-size: 0.7em;
+	vertical-align: 2px;
+}
+
+.vd-sev-error .vd-row-msg::before {
+	color: var(--text-error, #e74c3c);
+}
+
+.vd-sev-warning .vd-row-msg::before {
+	color: var(--text-warning, #e67e22);
+}
+
+.vd-sev-info .vd-row-msg::before {
+	color: var(--text-accent);
+}
+
+.vd-stats {
+	margin-top: 20px;
+}
+
+.vd-stats-title {
+	font-weight: 600;
+	margin-bottom: 6px;
+	color: var(--text-muted);
+	text-transform: uppercase;
+	font-size: 0.8em;
+	letter-spacing: 0.05em;
+}
+
+.vd-stats-grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.vd-stat {
+	display: flex;
+	flex-direction: column;
+	padding: 8px 14px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 8px;
+	min-width: 90px;
+}
+
+.vd-stat-value {
+	font-weight: 600;
+}
+
+.vd-stat-key {
+	color: var(--text-muted);
+	font-size: 0.8em;
+}
