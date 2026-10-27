@@ -2,10 +2,11 @@
 // Broken links, orphan notes, stubs, oversized attachments, frontmatter
 // lint, duplicate names, unsafe file names — with one-click fixes.
 
-import { Notice, Plugin, TFile, WorkspaceLeaf } from 'obsidian';
+import { EventRef, Notice, Plugin, TFile, WorkspaceLeaf } from 'obsidian';
 import { analyze } from './engine';
 import { collectSnapshot } from './collect';
 import { attachSuggestions, relinkContent } from './fixes';
+import { missingParents } from './pathutil';
 import { generateReport } from './report';
 import { DEFAULT_SETTINGS, VaultDoctorSettingTab, VaultDoctorSettings } from './settings';
 import { ScanResult } from './types';
@@ -87,7 +88,6 @@ export default class VaultDoctorPlugin extends Plugin {
 
 	async applyFixes(findings: ScanResult['findings']): Promise<void> {
 		let applied = 0;
-		const touched = new Set<string>();
 		for (const finding of findings) {
 			const fix = finding.fix;
 			if (!fix) continue;
@@ -100,7 +100,6 @@ export default class VaultDoctorPlugin extends Plugin {
 						relinkContent(content, fix.from, fix.to, kind).content,
 					);
 					applied++;
-					touched.add(fix.file);
 				} else if (fix.kind === 'trash') {
 					const af = this.app.vault.getAbstractFileByPath(fix.file);
 					if (!(af instanceof TFile)) continue;
@@ -122,14 +121,17 @@ export default class VaultDoctorPlugin extends Plugin {
 	private async waitForMetadataSettle(timeoutMs = 800): Promise<void> {
 		await new Promise<void>((resolve) => {
 			let done = false;
+			let ref: EventRef | null = null;
 			const finish = () => {
 				if (done) return;
 				done = true;
 				clearTimeout(timer);
+				if (ref) this.app.metadataCache.offref(ref);
 				resolve();
 			};
 			const timer = setTimeout(finish, timeoutMs);
-			this.registerEvent(this.app.metadataCache.on('resolved', finish));
+			ref = this.app.metadataCache.on('resolved', finish);
+			this.registerEvent(ref);
 		});
 	}
 
@@ -142,13 +144,23 @@ export default class VaultDoctorPlugin extends Plugin {
 			maxRowsPerSection: this.settings.maxReportRows,
 		});
 		const path = this.settings.reportPath;
-		const existing = this.app.vault.getAbstractFileByPath(path);
-		if (existing instanceof TFile) {
-			await this.app.vault.modify(existing, md);
-			await this.app.workspace.getLeaf('tab').openFile(existing);
-		} else {
-			const file = await this.app.vault.create(path, md);
-			await this.app.workspace.getLeaf('tab').openFile(file);
+		try {
+			const existing = this.app.vault.getAbstractFileByPath(path);
+			if (existing instanceof TFile) {
+				await this.app.vault.modify(existing, md);
+				await this.app.workspace.getLeaf('tab').openFile(existing);
+			} else {
+				for (const dir of missingParents(path,
+					(d) => this.app.vault.getAbstractFileByPath(d) != null)) {
+					await this.app.vault.createFolder(dir);
+				}
+				const file = await this.app.vault.create(path, md);
+				await this.app.workspace.getLeaf('tab').openFile(file);
+			}
+		} catch (err) {
+			console.error('[vault-doctor] report export failed', err);
+			new Notice(`Vault Doctor: could not write ${path} — ${err instanceof Error ? err.message : String(err)}`);
+			return;
 		}
 		new Notice(`Vault Doctor: report written to ${path}`);
 	}

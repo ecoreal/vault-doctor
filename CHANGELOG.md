@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+- Fixed: markdown links whose file name contains `#` (written as `%23` in the
+  link) were truncated at the encoded `#` and reported as broken. Link
+  destinations are now split on `#` before percent-decoding, and md relink
+  targets also encode `(` / `)` so they cannot truncate the link.
+- Fixed: exporting the report to a path whose parent folders do not exist yet
+  (e.g. `Reports/Report.md`) failed with an unhandled error. The folders are
+  now created, and any failure is reported via a notice instead of crashing.
+- Added: `missingParents` path helper (+5 tests, 105 total).
+
 ## 1.0.1 — 2026-10-28
 
 - Fixed: after "fix all", the automatic rescan could still report the pre-fix

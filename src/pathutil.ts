@@ -126,6 +126,24 @@ export function decodeLinkComponent(s: string): string {
 }
 
 /**
+ * Ancestor folders of `path` that do not exist yet, top-down, judged by the
+ * `has` predicate. A root-level file (no folder part) returns [].
+ */
+export function missingParents(path: string, has: (folder: string) => boolean): string[] {
+	const n = normPath(path);
+	const i = n.lastIndexOf('/');
+	if (i <= 0) return [];
+	const out: string[] = [];
+	let acc = '';
+	for (const d of n.slice(0, i).split('/')) {
+		if (!d) continue;
+		acc = acc ? acc + '/' + d : d;
+		if (!has(acc)) out.push(acc);
+	}
+	return out;
+}
+
+/**
  * Split an md-style link destination into decoded linkpath + subpath.
  * The '#' that starts a subpath is located BEFORE decoding, so a filename
  * containing a literal '#' (which md links must write as %23) is not

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
-	basename, buildMatcher, decodeLinkComponent, dirname, extname, relativePath, splitMdLink, stripExt,
+	basename, buildMatcher, decodeLinkComponent, dirname, extname, missingParents, relativePath,
+	splitMdLink, stripExt,
 } from '../src/pathutil';
 
 describe('path helpers', () => {
@@ -76,5 +77,24 @@ describe('splitMdLink', () => {
 		expect(decodeLinkComponent('a%20b')).toBe('a b');
 		expect(decodeLinkComponent('plain')).toBe('plain');
 		expect(decodeLinkComponent('%E0%A4%A')).toBe('%E0%A4%A');
+	});
+});
+
+describe('missingParents', () => {
+	const has = (f: string) => f === 'Reports' || f === 'a';
+
+	it('lists only the ancestors that do not exist, top-down', () => {
+		expect(missingParents('Reports/Sub/Note.md', has)).toEqual(['Reports/Sub']);
+		expect(missingParents('x/y/z/Note.md', has)).toEqual(['x', 'x/y', 'x/y/z']);
+	});
+
+	it('returns nothing for root-level files and existing folders', () => {
+		expect(missingParents('Note.md', has)).toEqual([]);
+		expect(missingParents('a/Note.md', has)).toEqual([]);
+		expect(missingParents('/Note.md', has)).toEqual([]);
+	});
+
+	it('skips empty segments from doubled slashes', () => {
+		expect(missingParents('Reports//Sub/Note.md', has)).toEqual(['Reports/Sub']);
 	});
 });
