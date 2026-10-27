@@ -1,6 +1,6 @@
 # Vault Doctor
 
-[![CI](https://github.com/OWNER/vault-doctor/actions/workflows/ci.yml/badge.svg)](../../actions)
+[![CI](https://github.com/ecoreal/vault-doctor/actions/workflows/ci.yml/badge.svg)](../../actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 **Health checks for your Obsidian vault — with one-click fixes.**
