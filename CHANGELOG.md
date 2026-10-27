@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.0.2 — 2026-10-28
 
 - Fixed: markdown links whose file name contains `#` (written as `%23` in the
   link) were truncated at the encoded `#` and reported as broken. Link

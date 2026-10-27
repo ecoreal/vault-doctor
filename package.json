@@ -1,6 +1,6 @@
 {
   "name": "vault-doctor",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Health checks for your Obsidian vault: broken links, orphan notes, stub notes, oversized attachments, frontmatter lint, ambiguous basenames and unsafe filenames — with one-click fixes.",
   "main": "main.js",
   "scripts": {
