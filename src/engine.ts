@@ -103,7 +103,7 @@ export function analyze(snapshot: VaultSnapshot, opts: EngineOptions): ScanResul
 						});
 					}
 				}
-				if (f.bodyLength < opts.stubThresholdChars) {
+				if (opts.checkStubs && f.bodyLength < opts.stubThresholdChars) {
 					stats.stubs++;
 					findings.push({
 						id: '',
@@ -172,7 +172,7 @@ export function analyze(snapshot: VaultSnapshot, opts: EngineOptions): ScanResul
 			agg.bytes += f.size;
 			stats.attachmentExt[ext] = agg;
 			const limit = opts.oversizeThresholdMB * 1024 * 1024;
-			if (f.size > limit && !ignored.matches(f.path)) {
+			if (opts.checkOversize && f.size > limit && !ignored.matches(f.path)) {
 				findings.push({
 					id: '',
 					category: 'oversize',

@@ -183,6 +183,12 @@ describe('stub notes', () => {
 		expect(empty.findings.find((f) => f.category === 'stub')?.fix).toEqual({ kind: 'trash', file: 'e.md' });
 		expect(partly.findings.find((f) => f.category === 'stub')?.fix).toBeUndefined();
 	});
+
+	it('can be disabled and then reports no stubs at all', () => {
+		const r = analyze(snap([rec({ path: 'tiny.md', bodyLength: 0 })]), opts({ checkStubs: false, checkOrphans: false }));
+		expect(r.findings).toHaveLength(0);
+		expect(r.stats.stubs).toBe(0);
+	});
 });
 
 describe('oversized attachments', () => {
@@ -207,6 +213,16 @@ describe('oversized attachments', () => {
 		expect(r.findings).toHaveLength(0);
 		expect(r.stats.attachmentExt['png']).toEqual({ count: 2, bytes: 300 });
 		expect(r.stats.attachments).toBe(2);
+	});
+
+	it('can be disabled while keeping the attachment inventory', () => {
+		const r = analyze(
+			snap([rec({ path: 'movie.mp4', ext: 'mp4', size: 15 * 1024 * 1024 })]),
+			opts({ checkOversize: false }),
+		);
+		expect(r.findings).toHaveLength(0);
+		expect(r.stats.attachments).toBe(1);
+		expect(r.stats.attachmentExt['mp4']).toEqual({ count: 1, bytes: 15 * 1024 * 1024 });
 	});
 });
 

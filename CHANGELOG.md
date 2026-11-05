@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Added: per-check toggles for stub notes and oversized attachments
+  (`checkStubs` / `checkOversize` in settings, default on). Previously these
+  two checks always ran, which made stub reports noisy in large vaults;
+  disabling one now also zeroes its stat counter, matching how orphans behave.
+
 ## 1.0.2 — 2026-10-28
 
 - Fixed: markdown links whose file name contains `#` (written as `%23` in the

@@ -124,6 +124,10 @@ export interface EngineOptions {
 	checkDuplicates: boolean;
 	checkUnsafeNames: boolean;
 	checkHeadingLinks: boolean;
+	/** Flag nearly-empty notes below stubThresholdChars */
+	checkStubs: boolean;
+	/** Flag non-note files above oversizeThresholdMB */
+	checkOversize: boolean;
 	treatTaggedAsLinked: boolean;
 	/** Max Levenshtein distance for auto-suggestions */
 	maxSuggestDistance: number;
@@ -139,6 +143,8 @@ export const DEFAULT_OPTIONS: EngineOptions = {
 	checkDuplicates: true,
 	checkUnsafeNames: true,
 	checkHeadingLinks: true,
+	checkStubs: true,
+	checkOversize: true,
 	treatTaggedAsLinked: true,
 	maxSuggestDistance: 3,
 };

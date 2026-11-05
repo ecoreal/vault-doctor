@@ -20,6 +20,8 @@ export const DEFAULT_SETTINGS: VaultDoctorSettings = {
 	checkDuplicates: true,
 	checkUnsafeNames: true,
 	checkHeadingLinks: true,
+	checkStubs: true,
+	checkOversize: true,
 	treatTaggedAsLinked: true,
 	maxSuggestDistance: 3,
 	reportPath: 'Vault Doctor Report.md',
@@ -86,6 +88,26 @@ export class VaultDoctorSettingTab extends PluginSettingTab {
 			.addToggle((t) =>
 				t.setValue(this.plugin.settings.checkHeadingLinks).onChange(async (v) => {
 					this.plugin.settings.checkHeadingLinks = v;
+					await this.plugin.saveSettings();
+				}),
+			);
+
+		new Setting(containerEl)
+			.setName('Detect stub notes')
+			.setDesc('Nearly empty notes below the stub threshold; empty ones also get a trash fix.')
+			.addToggle((t) =>
+				t.setValue(this.plugin.settings.checkStubs).onChange(async (v) => {
+					this.plugin.settings.checkStubs = v;
+					await this.plugin.saveSettings();
+				}),
+			);
+
+		new Setting(containerEl)
+			.setName('Detect oversized attachments')
+			.setDesc('Attachments above the size threshold; the attachment inventory is unaffected.')
+			.addToggle((t) =>
+				t.setValue(this.plugin.settings.checkOversize).onChange(async (v) => {
+					this.plugin.settings.checkOversize = v;
 					await this.plugin.saveSettings();
 				}),
 			);
