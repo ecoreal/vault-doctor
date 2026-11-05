@@ -6,6 +6,12 @@
   (`checkStubs` / `checkOversize` in settings, default on). Previously these
   two checks always ran, which made stub reports noisy in large vaults;
   disabling one now also zeroes its stat counter, matching how orphans behave.
+- Added: tag-driven release workflow (`.github/workflows/release.yml`) —
+  pushing a semver tag now runs the test suite, builds the bundle, verifies
+  the tag against `manifest.json` and publishes a GitHub release with
+  `main.js`, `manifest.json` and `styles.css`.
+- Fixed: the bundled-file banner pointed at the placeholder repository URL
+  instead of the published one.
 
 ## 1.0.2 — 2026-10-28
 
